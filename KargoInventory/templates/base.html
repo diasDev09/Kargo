@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Sistema de Estoque</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark px-3">
+<a class="navbar-brand" href="/">Estoque</a>
+<div>
+<a class="btn btn-sm btn-light" href="/">Home</a>
+<a class="btn btn-sm btn-light" href="/produto/">Produto</a>
+<a class="btn btn-sm btn-light" href="/estoque/">Estoque</a>
+<a class="btn btn-sm btn-light" href="/movimentacao/">Movimentação</a>
+<a class="btn btn-sm btn-warning" href="/dashboard/">Dashboard</a>
+</div>
+</nav>
+<div class="container mt-4">
+{% if messages %}{% for m in messages %}<div class="alert alert-info">{{ m }}</div>{% endfor %}{% endif %}
+{% block content %}{% endblock %}
+</div>
+</body>
+</html>

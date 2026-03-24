@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Produtos</h3>
+<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-success">Salvar</button></form>
+<hr>
+<table class="table">
+<tr><th>Nome</th><th>Categoria</th><th>Preço</th><th></th></tr>
+{% for p in produtos %}
+<tr>
+<td>{{ p.nome }}</td>
+<td>{{ p.categoria.nome }}</td>
+<td>{{ p.preco }}</td>
+<td>
+<a class="btn btn-sm btn-warning" href="/produto/?editar={{ p.id }}">Editar</a>
+<a class="btn btn-sm btn-danger" href="/produto/?deletar={{ p.id }}">Excluir</a>
+</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}

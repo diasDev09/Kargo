@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Movimentação</h3>
+<h5>Registrar</h5>
+<form method="post">{% csrf_token %}{{ form.as_p }}
+<button name="entrada" class="btn btn-success">Entrada</button>
+<button name="saida" class="btn btn-danger">Saída</button>
+</form>
+<hr>
+<h5>Histórico</h5>
+<table class="table">
+<tr><th>Produto</th><th>Tipo</th><th>Quantidade</th><th>Data</th></tr>
+{% for m in movimentacoes %}
+<tr>
+<td>{{ m.produto.nome }}</td>
+<td>{{ m.get_tipo_display }}</td>
+<td>{{ m.quantidade }}</td>
+<td>{{ m.data }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}

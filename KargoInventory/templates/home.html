@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Home</h3>
+<p>Espaço de testes para scripts da aula.</p>
+<div class="row">
+<div class="col"><div class="card p-3">Total produtos: {{ total_produtos }}</div></div>
+<div class="col"><div class="card p-3">Estoque baixo: {{ estoque_baixo }}</div></div>
+</div>
+<h5 class="mt-4">Últimas movimentações</h5>
+<ul class="list-group">
+{% for mov in ultimas_movimentacoes %}
+<li class="list-group-item">{{ mov.produto.nome }} | {{ mov.get_tipo_display }} | {{ mov.quantidade }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

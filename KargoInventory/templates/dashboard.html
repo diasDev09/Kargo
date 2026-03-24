@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Dashboard</h3>
+<div class="row">
+<div class="col"><div class="card p-3">Produtos cadastrados: {{ total_produtos }}</div></div>
+<div class="col"><div class="card p-3">Itens com estoque baixo: {{ estoque_baixo }}</div></div>
+</div>
+<hr>
+<h5>Movimentações recentes</h5>
+<table class="table">
+<tr><th>Produto</th><th>Tipo</th><th>Qtd</th><th>Data</th></tr>
+{% for m in movimentacoes %}
+<tr><td>{{ m.produto.nome }}</td><td>{{ m.get_tipo_display }}</td><td>{{ m.quantidade }}</td><td>{{ m.data }}</td></tr>
+{% endfor %}
+</table>
+{% endblock %}
