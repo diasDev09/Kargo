@@ -46,16 +46,22 @@ class ProdutoForm(forms.ModelForm):
 
 class MovimentacaoForm(forms.ModelForm):
 
+    def __init__(self,*args,empresa=None,**kwargs):
+        super().__init__(*args,**kwargs)
+        if empresa:
+            self.fields["produto"].queryset=Produto.listar_produtos_empresa(empresa)
+
+
     class Meta:
-        model = Movimentacao
-        fields = ["produto","quantidade"]
-        widgets = {
-            "produto": forms.Select(attrs={"class":"form-select"}),
-            "quantidade": forms.NumberInput(attrs={"class":"form-control","min":"1"})
+        model=Movimentacao
+        fields=["produto","quantidade"]
+        widgets={
+        "produto":forms.Select(attrs={"class":"form-select"}),
+        "quantidade":forms.NumberInput(attrs={"class":"form-control","min":"1"})
         }
 
+
     def clean_quantidade(self):
-        quantidade = self.cleaned_data.get("quantidade")
-        if quantidade <= 0:
-            raise forms.ValidationError("Quantidade deve ser maior que zero")
+        quantidade=self.cleaned_data.get("quantidade")
+        if quantidade<=0: raise forms.ValidationError("Quantidade deve ser maior que zero")
         return quantidade
