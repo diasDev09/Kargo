@@ -18,6 +18,7 @@ def dashboard(request):
 
 
 def produto(request):
+
     form=ProdutoForm(request.POST or None)
 
     if "deletar" in request.GET:
@@ -25,11 +26,26 @@ def produto(request):
         return redirect("produto")
 
     if request.method=="POST" and form.is_valid():
-        produto=Produto.criar_produto(form.cleaned_data)
+
+        nome_categoria=form.cleaned_data.get("categoria_nome")
+
+        categoria,_=Categoria.objects.get_or_create(nome=nome_categoria)
+
+        data=form.cleaned_data
+        data["categoria"]=categoria
+
+        produto=Produto.criar_produto(data)
+
         Estoque.criar_estoque(produto)
+
         return redirect("produto")
 
-    context={"form":form,"produtos":Produto.listar_produtos()}
+    context={
+    "form":form,
+    "produtos":Produto.listar_produtos(),
+    "categorias":Categoria.listar_categorias()
+    }
+
     return render(request,"produto.html",context)
 
 

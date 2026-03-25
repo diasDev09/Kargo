@@ -21,20 +21,24 @@ class CategoriaForm(forms.ModelForm):
 
 class ProdutoForm(forms.ModelForm):
 
+    categoria_nome=forms.CharField(
+    widget=forms.TextInput(attrs={"class":"form-control","list":"categorias"})
+    )
+
     class Meta:
-        model = Produto
-        fields = ["nome","descricao","preco","categoria","ativo"]
-        widgets = {
-            "nome": forms.TextInput(attrs={"class":"form-control","placeholder":"Nome do produto"}),
-            "descricao": forms.Textarea(attrs={"class":"form-control","rows":3}),
-            "preco": forms.NumberInput(attrs={"class":"form-control","step":"0.01"}),
-            "categoria": forms.Select(attrs={"class":"form-select"}),
-            "ativo": forms.CheckboxInput(attrs={"class":"form-check-input"})
+        model=Produto
+        fields=["nome","descricao","preco","ativo"]
+
+        widgets={
+        "nome":forms.TextInput(attrs={"class":"form-control"}),
+        "descricao":forms.Textarea(attrs={"class":"form-control","rows":3}),
+        "preco":forms.NumberInput(attrs={"class":"form-control","step":"0.01"}),
+        "ativo":forms.CheckboxInput(attrs={"class":"form-check-input"})
         }
 
     def clean_preco(self):
-        preco = self.cleaned_data.get("preco")
-        if preco <= 0:
+        preco=self.cleaned_data.get("preco")
+        if preco<=0:
             raise forms.ValidationError("Preço deve ser maior que zero")
         return preco
 

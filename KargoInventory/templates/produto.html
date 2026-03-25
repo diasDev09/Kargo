@@ -1,7 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
 <h3>Produtos</h3>
-<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-success">Salvar</button></form>
+<form method="post">
+{% csrf_token %}
+
+{{ form.nome.label_tag }}{{ form.nome }}
+
+{{ form.descricao.label_tag }}{{ form.descricao }}
+
+{{ form.preco.label_tag }}{{ form.preco }}
+
+<label>Categoria</label>
+
+<input name="categoria_nome" list="categorias" class="form-control">
+
+<datalist id="categorias">
+
+{% for c in categorias %}
+
+<option value="{{ c.nome }}">
+
+{% endfor %}
+
+</datalist>
+
+{{ form.ativo.label_tag }}{{ form.ativo }}
+
+<button class="btn btn-success mt-2">Salvar</button>
+
+</form>
+
 <hr>
 <table class="table">
 <tr><th>Nome</th><th>Categoria</th><th>Preço</th><th></th></tr>
