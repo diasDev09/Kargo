@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Novo usuário</h3>
+
+<form method="post">{% csrf_token %}{{ form.as_p }}
+
+<div class="d-flex gap-2">
+<button class="btn btn-success">Registrar</button>
+<a href="/login/" class="btn btn-outline-secondary">Voltar</a>
+</div>
+
+</form>
+
+{% endblock %}

@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from KargoInventory import views
+from accounts import views as acc_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +26,8 @@ urlpatterns = [
     path("produto/", views.produto, name="produto"),
     path("estoque/", views.estoque, name="estoque"),
     path("movimentacao/", views.movimentacao, name="movimentacao"),
+    path("login/",acc_views.login_view,name="login"),
+    path("logout/",acc_views.logout_view,name="logout"),
+    path("registrar/",acc_views.registrar_usuario,name="registrar_usuario"),
+    path("empresa/",acc_views.registrar_empresa,name="registrar_empresa"),
 ]
