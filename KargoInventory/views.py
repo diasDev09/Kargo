@@ -3,16 +3,13 @@ from django.contrib import messages
 from .models import Produto,Categoria,Estoque,Movimentacao
 from .forms import ProdutoForm,CategoriaForm,MovimentacaoForm
 from django.contrib.auth.decorators import login_required
+from accounts.decorators import empresa_required
 
 
 @login_required
+@empresa_required 
 def home(request):
-
     emp=request.user.empresa
-
-    if not emp:
-        return redirect("registrar_empresa")
-
     context={
     "total_produtos":Produto.listar_produtos_empresa(emp).count(),
     "estoque_baixo":Estoque.listar_estoque_baixo(emp).count(),
@@ -22,10 +19,9 @@ def home(request):
     return render(request,"home.html",context)
 
 @login_required
+@empresa_required 
 def dashboard(request):
     emp=request.user.empresa
-    if not emp:
-        return redirect("registrar_empresa")
     context={
     "total_produtos":Produto.listar_produtos_empresa(emp).count(),
     "estoque_baixo":Estoque.listar_estoque_baixo(emp).count(),
@@ -35,12 +31,10 @@ def dashboard(request):
 
 
 @login_required
+@empresa_required 
 def produto(request):
 
     emp=request.user.empresa
-    if not emp:
-        return redirect("registrar_empresa")
-
     form=ProdutoForm(request.POST or None)
 
     if "deletar" in request.GET:
@@ -72,20 +66,18 @@ def produto(request):
 
 
 @login_required
+@empresa_required 
 def estoque(request):
     emp=request.user.empresa
-    if not emp:
-        return redirect("registrar_empresa")
     context={"estoque":Estoque.listar_estoque_empresa(emp)}
     return render(request,"estoque.html",context)
 
 
 @login_required
+@empresa_required 
 def movimentacao(request):
 
     emp=request.user.empresa
-    if not emp:
-        return redirect("registrar_empresa")
 
     form=MovimentacaoForm(request.POST or None,empresa=emp)
 
