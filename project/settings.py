@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5u5*fq35sx7-w=a%6sis)0)_u#63u(@9!1qdg$g(gzr^ava6^9'
+SECRET_KEY = 'django-insecure-vn+w!uqn2d^p!-_#5otlbe!+l#etmn)0w@p!gky7s(x1qqn4-3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -116,3 +116,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Após login bem-sucedido, redireciona para o dashboard do Kargo
+LOGIN_REDIRECT_URL = '/kargo/'
+
+# Se alguém tentar acessar uma view protegida sem estar logado,
+# o Django redireciona para essa URL automaticamente
+LOGIN_URL = '/login/'
+
+# Após logout, volta para a tela de login
+LOGOUT_REDIRECT_URL = '/login/'
