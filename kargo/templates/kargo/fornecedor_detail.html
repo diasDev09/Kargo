@@ -1,0 +1,117 @@
+{% extends "kargo/base.html" %}
+
+{% block title %}{{ fornecedor.nome }}{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-start mb-4">
+  <div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb small mb-1">
+        <li class="breadcrumb-item"><a href="{% url 'kargo:fornecedor_list' %}">Fornecedores</a></li>
+        <li class="breadcrumb-item active">{{ fornecedor.nome }}</li>
+      </ol>
+    </nav>
+    <h5 class="mb-0 fw-semibold">{{ fornecedor.nome }}</h5>
+    {% if fornecedor.cnpj %}
+      <span class="text-muted font-monospace small">CNPJ: {{ fornecedor.cnpj }}</span>
+    {% endif %}
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'kargo:fornecedor_update' fornecedor.pk %}" class="btn btn-sm btn-outline-primary">
+      <i class="bi bi-pencil me-1"></i>Editar
+    </a>
+    <a href="{% url 'kargo:fornecedor_delete' fornecedor.pk %}" class="btn btn-sm btn-outline-danger">
+      <i class="bi bi-trash me-1"></i>Excluir
+    </a>
+  </div>
+</div>
+
+<div class="row g-3">
+
+  <!-- Informações de contato -->
+  <div class="col-lg-4">
+    <div class="bg-white border rounded p-3">
+      <h6 class="text-muted mb-3">Contato</h6>
+      <div class="mb-2">
+        <div class="small text-muted">Telefone</div>
+        <div>{{ fornecedor.telefone|default:"—" }}</div>
+      </div>
+      <div>
+        <div class="small text-muted">E-mail</div>
+        <div>
+          {% if fornecedor.email %}
+            <a href="mailto:{{ fornecedor.email }}">{{ fornecedor.email }}</a>
+          {% else %}—{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Produtos fornecidos -->
+  <div class="col-lg-8">
+    <div class="bg-white border rounded p-3 mb-3">
+      <h6 class="mb-3">Produtos Fornecidos</h6>
+      {% if produtos %}
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Categoria</th>
+              <th class="text-end">Qtd.</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in produtos %}
+            <tr>
+              <td>
+                <a href="{% url 'kargo:produto_detail' p.pk %}">{{ p.nome }}</a>
+              </td>
+              <td class="text-muted small">{{ p.categoria.nome|default:"—" }}</td>
+              <td class="text-end {% if p.quantidade_atual <= p.estoque_minimo %}estoque-critico{% endif %}">
+                {{ p.quantidade_atual }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="text-muted small mb-0">Nenhum produto vinculado a este fornecedor.</p>
+      {% endif %}
+    </div>
+
+    <!-- Pedidos recentes para este fornecedor -->
+    <div class="bg-white border rounded p-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">Pedidos Recentes</h6>
+        <a href="{% url 'kargo:pedido_list' %}" class="small text-primary text-decoration-none">Ver todos →</a>
+      </div>
+      {% if pedidos %}
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Entrega prevista</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pedido in pedidos %}
+            <tr>
+              <td>
+                <a href="{% url 'kargo:pedido_detail' pedido.pk %}">
+                  <span class="badge bg-secondary">{{ pedido.get_status_display }}</span>
+                </a>
+              </td>
+              <td class="text-muted small">{{ pedido.data_entrega|default:"—" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="text-muted small mb-0">Nenhum pedido registrado para este fornecedor.</p>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

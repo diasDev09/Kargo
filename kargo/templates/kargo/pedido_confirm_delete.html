@@ -1,0 +1,44 @@
+{% extends "kargo/base.html" %}
+
+{% block title %}Excluir Pedido #{{ pedido.pk }}{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb small mb-1">
+    <li class="breadcrumb-item"><a href="{% url 'kargo:pedido_list' %}">Pedidos</a></li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'kargo:pedido_detail' pedido.pk %}">Pedido #{{ pedido.pk }}</a>
+    </li>
+    <li class="breadcrumb-item active">Excluir</li>
+  </ol>
+</nav>
+
+<div class="bg-white border border-danger rounded p-4" style="max-width:520px; margin-top:1rem">
+  <h5 class="text-danger mb-3">
+    <i class="bi bi-exclamation-triangle me-2"></i>Confirmar exclusão
+  </h5>
+  <p>Você está prestes a excluir o <strong>Pedido #{{ pedido.pk }}</strong>
+    do fornecedor <strong>{{ pedido.fornecedor.nome }}</strong>.
+    Esta ação não pode ser desfeita.</p>
+
+  <div class="alert alert-warning py-2 small">
+    <i class="bi bi-info-circle me-1"></i>
+    Os itens vinculados a este pedido também serão excluídos se o modelo
+    estiver configurado com <code>on_delete=CASCADE</code>.
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-danger">
+        <i class="bi bi-trash me-1"></i>Sim, excluir
+      </button>
+      <a href="{% url 'kargo:pedido_detail' pedido.pk %}" class="btn btn-outline-secondary">
+        Cancelar
+      </a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

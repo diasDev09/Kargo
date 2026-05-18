@@ -1,0 +1,131 @@
+{% extends "kargo/base.html" %}
+
+{% block title %}{{ produto.nome }}{% endblock %}
+
+{% block content %}
+
+<!-- ── Cabeçalho com breadcrumb ── -->
+<div class="d-flex justify-content-between align-items-start mb-4">
+  <div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb small mb-1">
+        <li class="breadcrumb-item"><a href="{% url 'kargo:produto_list' %}">Produtos</a></li>
+        <li class="breadcrumb-item active">{{ produto.nome }}</li>
+      </ol>
+    </nav>
+    <h5 class="mb-0 fw-semibold">{{ produto.nome }}</h5>
+    <span class="text-muted font-monospace small">{{ produto.sku }}</span>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'kargo:produto_update' produto.pk %}" class="btn btn-sm btn-outline-primary">
+      <i class="bi bi-pencil me-1"></i>Editar
+    </a>
+    <a href="{% url 'kargo:produto_delete' produto.pk %}" class="btn btn-sm btn-outline-danger">
+      <i class="bi bi-trash me-1"></i>Excluir
+    </a>
+  </div>
+</div>
+
+<div class="row g-3">
+
+  <!-- ── Informações principais ── -->
+  <div class="col-lg-8">
+    <div class="bg-white border rounded p-3 mb-3">
+      <h6 class="text-muted mb-3">Informações</h6>
+      <div class="row g-2">
+        <div class="col-sm-6">
+          <div class="small text-muted">Categoria</div>
+          <div>{{ produto.categoria.nome|default:"—" }}</div>
+        </div>
+        <div class="col-sm-6">
+          <div class="small text-muted">Fornecedor</div>
+          <div>
+            {% if produto.fornecedor %}
+              <a href="{% url 'kargo:fornecedor_detail' produto.fornecedor.pk %}">{{ produto.fornecedor.nome }}</a>
+            {% else %}—{% endif %}
+          </div>
+        </div>
+        <div class="col-12 mt-2">
+          <div class="small text-muted">Descrição</div>
+          <div>{{ produto.descricao|default:"Sem descrição." }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Histórico de movimentações desse produto -->
+    <div class="bg-white border rounded p-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">Histórico de Movimentações</h6>
+        <a href="{% url 'kargo:movimentacao_create' %}?produto={{ produto.pk }}"
+           class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-plus-lg me-1"></i>Registrar
+        </a>
+      </div>
+
+      {% if movimentacoes %}
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th class="text-end">Qtd</th>
+              <th>Motivo</th>
+              <th>Usuário</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for mov in movimentacoes %}
+            <tr>
+              <td><span class="badge badge-{{ mov.tipo }}">{{ mov.get_tipo_display }}</span></td>
+              <td class="text-end">{{ mov.quantidade }}</td>
+              <td class="text-muted small">{{ mov.motivo|default:"—" }}</td>
+              <td class="text-muted small">{{ mov.usuario.username }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="text-muted small mb-0">Nenhuma movimentação registrada para este produto.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ── Painel lateral de estoque ── -->
+  <div class="col-lg-4">
+    <div class="bg-white border rounded p-3 mb-3">
+      <h6 class="text-muted mb-3">Estoque</h6>
+      <div class="mb-2">
+        <div class="small text-muted">Quantidade atual</div>
+        <div class="fw-semibold fs-4 {% if produto.quantidade_atual <= produto.estoque_minimo %}text-danger{% endif %}">
+          {{ produto.quantidade_atual }}
+          {% if produto.quantidade_atual <= produto.estoque_minimo %}
+            <i class="bi bi-exclamation-triangle-fill text-danger small ms-1" title="Abaixo do mínimo"></i>
+          {% endif %}
+        </div>
+      </div>
+      <div class="row g-2">
+        <div class="col-6">
+          <div class="small text-muted">Mínimo</div>
+          <div>{{ produto.estoque_minimo }}</div>
+        </div>
+        <div class="col-6">
+          <div class="small text-muted">Máximo</div>
+          <div>{{ produto.estoque_maximo|default:"—" }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white border rounded p-3">
+      <h6 class="text-muted mb-3">Preços</h6>
+      <div class="mb-2">
+        <div class="small text-muted">Preço de custo</div>
+        <div>R$ {{ produto.preco_custo|floatformat:2 }}</div>
+      </div>
+      <div>
+        <div class="small text-muted">Preço de venda</div>
+        <div class="fw-semibold">R$ {{ produto.preco_venda|floatformat:2 }}</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

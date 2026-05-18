@@ -1,0 +1,110 @@
+{% extends "kargo/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h5 class="mb-0 fw-semibold">Dashboard</h5>
+</div>
+
+<!-- ── Cards de métricas ── -->
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-lg-3">
+    <div class="metric-card">
+      <div class="metric-value">{{ total_produtos }}</div>
+      <div class="metric-label"><i class="bi bi-box me-1"></i>Produtos cadastrados</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="metric-card">
+      <div class="metric-value">{{ total_categorias }}</div>
+      <div class="metric-label"><i class="bi bi-tag me-1"></i>Categorias</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="metric-card">
+      <div class="metric-value">{{ total_fornecedores }}</div>
+      <div class="metric-label"><i class="bi bi-building me-1"></i>Fornecedores</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="metric-card">
+      <div class="metric-value {% if produtos_criticos.count > 0 %}estoque-critico{% endif %}">
+        {{ produtos_criticos.count }}
+      </div>
+      <div class="metric-label"><i class="bi bi-exclamation-triangle me-1"></i>Estoque crítico</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+
+  <!-- Feed de movimentações recentes -->
+  <div class="col-lg-7">
+    <div class="bg-white border rounded p-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">Últimas Movimentações</h6>
+        <a href="{% url 'kargo:movimentacao_list' %}" class="small text-primary text-decoration-none">Ver todas →</a>
+      </div>
+
+      {% if ultimas_movimentacoes %}
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Tipo</th>
+              <th>Qtd</th>
+              <th>Usuário</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for mov in ultimas_movimentacoes %}
+            <tr>
+              <td>{{ mov.produto.nome }}</td>
+              <td>
+                <!-- O badge muda de cor dependendo do tipo de movimentação -->
+                <span class="badge badge-{{ mov.tipo }}">{{ mov.get_tipo_display }}</span>
+              </td>
+              <td>{{ mov.quantidade }}</td>
+              <td class="text-muted">{{ mov.usuario.username }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="text-muted small mb-0">Nenhuma movimentação registrada ainda.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Lista de produtos em estoque crítico -->
+  <div class="col-lg-5">
+    <div class="bg-white border rounded p-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0 text-danger">
+          <i class="bi bi-exclamation-triangle me-1"></i>Estoque Crítico
+        </h6>
+        <a href="{% url 'kargo:produto_list' %}" class="small text-primary text-decoration-none">Ver produtos →</a>
+      </div>
+
+      {% if produtos_criticos %}
+        <ul class="list-unstyled mb-0">
+          {% for p in produtos_criticos %}
+          <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <a href="{% url 'kargo:produto_detail' p.pk %}" class="text-decoration-none text-dark small">
+              {{ p.nome }}
+            </a>
+            <span class="badge bg-danger">{{ p.quantidade_atual }} un.</span>
+          </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted small mb-0">
+          <i class="bi bi-check-circle text-success me-1"></i>Todos os estoques estão OK.
+        </p>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}
