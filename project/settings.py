@@ -117,12 +117,3 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# Após login bem-sucedido, redireciona para o dashboard do Kargo
-LOGIN_REDIRECT_URL = '/kargo/'
-
-# Se alguém tentar acessar uma view protegida sem estar logado,
-# o Django redireciona para essa URL automaticamente
-LOGIN_URL = '/login/'
-
-# Após logout, volta para a tela de login
-LOGOUT_REDIRECT_URL = '/login/'

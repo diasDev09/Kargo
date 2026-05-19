@@ -1,11 +1,12 @@
 # kargo/urls.py
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 
 app_name = 'kargo'
 
 urlpatterns = [
-
+    
     # Dashboard — raiz do sistema
     path('', views.DashboardView.as_view(), name='dashboard'),
 

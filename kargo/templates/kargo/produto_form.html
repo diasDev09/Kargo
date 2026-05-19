@@ -1,0 +1,121 @@
+{% extends "kargo/base.html" %}
+
+{% block title %}{% if object %}Editar {{ object.nome }}{% else %}Novo Produto{% endif %}{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb e título dinâmico -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb small mb-1">
+    <li class="breadcrumb-item"><a href="{% url 'kargo:produto_list' %}">Produtos</a></li>
+    {% if object %}
+      <li class="breadcrumb-item">
+        <a href="{% url 'kargo:produto_detail' object.pk %}">{{ object.nome }}</a>
+      </li>
+      <li class="breadcrumb-item active">Editar</li>
+    {% else %}
+      <li class="breadcrumb-item active">Novo</li>
+    {% endif %}
+  </ol>
+</nav>
+
+<h5 class="mb-4 fw-semibold">
+  {% if object %}Editar Produto{% else %}Cadastrar Produto{% endif %}
+</h5>
+
+<div class="bg-white border rounded p-4 kargo-form">
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    <!-- Dados de identificação -->
+    <h6 class="text-muted mb-3">Identificação</h6>
+    <div class="row g-3 mb-4">
+      <div class="col-md-8">
+        <label for="{{ form.nome.id_for_label }}" class="form-label">Nome *</label>
+        {{ form.nome }}
+        {% if form.nome.errors %}
+          <div class="invalid-feedback d-block">{{ form.nome.errors.0 }}</div>
+        {% endif %}
+      </div>
+      <div class="col-md-4">
+        <label for="{{ form.sku.id_for_label }}" class="form-label">SKU *</label>
+        {{ form.sku }}
+        {% if form.sku.errors %}
+          <div class="invalid-feedback d-block">{{ form.sku.errors.0 }}</div>
+        {% endif %}
+      </div>
+      <div class="col-12">
+        <label for="{{ form.descricao.id_for_label }}" class="form-label">Descrição</label>
+        {{ form.descricao }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{ form.categoria.id_for_label }}" class="form-label">Categoria</label>
+        {{ form.categoria }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{ form.fornecedor.id_for_label }}" class="form-label">Fornecedor</label>
+        {{ form.fornecedor }}
+      </div>
+    </div>
+
+    <!-- Preços -->
+    <h6 class="text-muted mb-3">Preços</h6>
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <label for="{{ form.preco_custo.id_for_label }}" class="form-label">Preço de Custo (R$)</label>
+        {{ form.preco_custo }}
+      </div>
+      <div class="col-md-6">
+        <label for="{{ form.preco_venda.id_for_label }}" class="form-label">Preço de Venda (R$)</label>
+        {{ form.preco_venda }}
+      </div>
+    </div>
+
+    <!-- Estoque — quantidade_atual só aparece no CreateView (omitida no UpdateView) -->
+    <h6 class="text-muted mb-3">Estoque</h6>
+    <div class="row g-3 mb-4">
+      {% if form.quantidade_atual %}
+      <div class="col-md-4">
+        <label for="{{ form.quantidade_atual.id_for_label }}" class="form-label">Quantidade inicial</label>
+        {{ form.quantidade_atual }}
+        <div class="form-text">Após criar, ajuste via Movimentações.</div>
+      </div>
+      {% endif %}
+      <div class="col-md-4">
+        <label for="{{ form.estoque_minimo.id_for_label }}" class="form-label">Estoque mínimo</label>
+        {{ form.estoque_minimo }}
+      </div>
+      <div class="col-md-4">
+        <label for="{{ form.estoque_maximo.id_for_label }}" class="form-label">Estoque máximo</label>
+        {{ form.estoque_maximo }}
+      </div>
+    </div>
+
+    <!-- Botões de ação -->
+    <div class="d-flex gap-2 pt-2 border-top">
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-check-lg me-1"></i>Salvar
+      </button>
+      <!-- O cancelar vai para o lugar certo dependendo se é create ou update -->
+      {% if object %}
+        <a href="{% url 'kargo:produto_detail' object.pk %}" class="btn btn-outline-secondary">Cancelar</a>
+      {% else %}
+        <a href="{% url 'kargo:produto_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Adiciona a classe form-control do Bootstrap em todos os inputs do form automaticamente.
+  // Isso evita ter que usar um ModelForm customizado só para adicionar attrs de widget.
+  document.querySelectorAll('.kargo-form input, .kargo-form select, .kargo-form textarea')
+    .forEach(el => {
+      el.classList.add(el.tagName === 'SELECT' ? 'form-select' : 'form-control');
+      el.classList.add('form-control-sm');
+    });
+</script>
+{% endblock %}

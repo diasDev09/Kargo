@@ -1,0 +1,45 @@
+{% extends "kargo/base.html" %}
+
+{% block title %}Excluir {{ produto.nome }}{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb small mb-1">
+    <li class="breadcrumb-item"><a href="{% url 'kargo:produto_list' %}">Produtos</a></li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'kargo:produto_detail' produto.pk %}">{{ produto.nome }}</a>
+    </li>
+    <li class="breadcrumb-item active">Excluir</li>
+  </ol>
+</nav>
+
+<div class="bg-white border border-danger rounded p-4" style="max-width:520px; margin-top:1rem">
+  <h5 class="text-danger mb-3">
+    <i class="bi bi-exclamation-triangle me-2"></i>Confirmar exclusão
+  </h5>
+  <p>Você está prestes a excluir o produto <strong>{{ produto.nome }}</strong>
+    <span class="text-muted font-monospace small">({{ produto.sku }})</span>.
+    Esta ação não pode ser desfeita.</p>
+
+  <!-- Aviso extra se houver movimentações vinculadas -->
+  <div class="alert alert-warning py-2 small">
+    <i class="bi bi-info-circle me-1"></i>
+    Se este produto possuir movimentações ou itens de pedido vinculados,
+    a exclusão pode ser bloqueada pelo banco de dados.
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-danger">
+        <i class="bi bi-trash me-1"></i>Sim, excluir
+      </button>
+      <a href="{% url 'kargo:produto_detail' produto.pk %}" class="btn btn-outline-secondary">
+        Cancelar
+      </a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}
