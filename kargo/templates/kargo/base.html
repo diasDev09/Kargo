@@ -145,14 +145,6 @@
   <a class="navbar-brand" href="{% url 'kargo:dashboard' %}">
     <i class="bi bi-box-seam me-1"></i> Kargo
   </a>
-
-  {% if request.user.is_authenticated %}
-  <span class="nav-user">
-    <i class="bi bi-person-circle me-1"></i>{{ request.user.username }}
-    &nbsp;·&nbsp;
-    <a href="{% url 'logout' %}" class="text-white-50 text-decoration-none" style="font-size:.8rem">Sair</a>
-  </span>
-  {% endif %}
 </nav>
 
 <!-- ──────────── LAYOUT PRINCIPAL ──────────── -->
